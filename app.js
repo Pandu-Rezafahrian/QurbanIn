@@ -1,7 +1,38 @@
-// npx sequelize-cli model:generate --name User --attributes email:string,password:string,role:string
-// npx sequelize-cli model:generate --name UserProfile --attributes fullName:string,phone:string,address:string
-// npx sequelize-cli model:generate --name Farm --attributes name:string,location:string,description:string
-// npx sequelize-cli model:generate --name Animal --attributes name:string,type:string,weight:integer,age:integer,price:integer,status:string,imageUrl:string
-// npx sequelize-cli model:generate --name OrderItem --attributes price:integer
-// npx sequelize-cli model:generate --name Order --attributes totalPrice:integer,status:string,orderDate:integer
-// fk userId, orderId, farmId, animalId
+const express = require("express");
+const app = express();
+const session = require("express-session");
+const port = 3000;
+const authRouter = require("./routes/auth");
+const animalRouter = require("./routes/animal");
+const farmRouter = require("./routes/farm");
+const orderRouter = require("./routes/order");
+
+app.set("view engine", "ejs");
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static("public"));
+app.use(
+  session({
+    secret: "qurbanin_secret",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false,
+      sameSite: true,
+    },
+  }),
+);
+
+// ==== Routers ====
+app.use("/", authRouter);
+app.use("/animals", animalRouter);
+app.use("/farms", farmRouter);
+app.use("/orders", orderRouter);
+
+app.use((req, res) => {
+  res.status(404).render("404", { title: "Halaman Tidak Ditemukan" });
+});
+
+app.listen(port, () => {
+  console.log(`QurbanIn app listening on port ${port}`);
+});
