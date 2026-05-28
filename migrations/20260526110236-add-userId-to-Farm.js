@@ -6,7 +6,7 @@ module.exports = {
     await queryInterface.addColumn("Farms", "userId", {
       type: Sequelize.INTEGER,
       references: {
-        model: "Farms",
+        model: "Users",
         key: "id",
       },
       onUpdate: "cascade",
