@@ -3,23 +3,35 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+   await queryInterface.bulkInsert('Farms', [
+      {
+        name: 'Kandang Berkah Jaya',
+        location: 'Cirebon, Jawa Barat',
+        description: 'Kandang hewan kurban terpercaya dengan hewan pilihan berkualitas tinggi',
+        userId: 1,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        name: 'Peternakan Al-Barokah',
+        location: 'Bandung, Jawa Barat',
+        description: 'Spesialis hewan kurban sapi dan kambing dengan sertifikat kesehatan',
+        userId: 1,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        name: 'Kandang Maju Bersama',
+        location: 'Kuningan, Jawa Barat',
+        description: 'Hewan kurban sehat dan terawat langsung dari peternak lokal',
+        userId: 1,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+    ]);
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    await queryInterface.bulkDelete('Farms', null, {});
   }
 };

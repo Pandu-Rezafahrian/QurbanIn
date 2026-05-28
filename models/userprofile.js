@@ -43,16 +43,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       phone: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         validate: {
-          notNull: {
-            args: true,
-            msg: "Nomor telepon tidak boleh kosong",
-          },
-          notEmpty: {
-            args: true,
-            msg: "Nomor telepon tidak boleh kosong",
-          },
           isNumeric: {
             args: true,
             msg: "Nomor telepon harus berupa angka",
@@ -65,17 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       address: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notNull: {
-            args: true,
-            msg: "Alamat tidak boleh kosong",
-          },
-          notEmpty: {
-            args: true,
-            msg: "Alamat tidak boleh kosong",
-          },
-        },
+        allowNull: true,
       },
       userId: {
         type: DataTypes.INTEGER,
