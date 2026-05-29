@@ -39,11 +39,11 @@ Built with **Node.js, Express, Sequelize, EJS**, and styled with a custom UI.
 
 ## 📂 Project Structure
 QurbanIn/
-├── controllers/       # Route controllers (Animal, Farm, Auth)
-├── models/            # Sequelize models (User, Animal, Farm, Order)
-├── migrations/        # Database migrations
-├── seeders/           # Initial data
-├── routes/            # Express routes
-├── views/             # EJS templates (animals, farms, auth, partials)
-├── public/            # Static assets (CSS, JS)
-└── app.js             # Main Express app
+├── controllers/
+├── models/
+├── migrations/
+├── seeders/
+├── routes/
+├── views/
+├── public/
+└── app.js
