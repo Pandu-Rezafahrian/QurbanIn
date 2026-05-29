@@ -39,11 +39,19 @@ Built with **Node.js, Express, Sequelize, EJS**, and styled with a custom UI.
 
 ## 📂 Project Structure
 QurbanIn/
+
 ├── controllers/
+
 ├── models/
+
 ├── migrations/
+
 ├── seeders/
+
 ├── routes/
+
 ├── views/
+
 ├── public/
+
 └── app.js
