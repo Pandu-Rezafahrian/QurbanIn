@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <title>Tambah Kandang - QurbanIn</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <%- include('../partials/navbar') %>
+  <div class="container mt-4" style="max-width:560px">
+    <h4 class="fw-bold mb-4">Tambah Kandang</h4>
+
+    <% if (errors && errors.length > 0) { %>
+      <div class="alert alert-danger">
+        <ul class="mb-0">
+          <% errors.forEach(e => { %><li><%= e.message %></li><% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <form action="/farms/add" method="POST">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nama Kandang</label>
+            <input type="text" name="name" class="form-control" value="<%= farm ? farm.name : '' %>" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Lokasi</label>
+            <input type="text" name="location" class="form-control" value="<%= farm ? farm.location : '' %>" required>
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Deskripsi <span class="text-muted fw-normal">(opsional)</span></label>
+            <textarea name="description" class="form-control" rows="3"><%= farm ? farm.description : '' %></textarea>
+          </div>
+          <button type="submit" class="btn btn-success w-100">Simpan</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -36,11 +36,13 @@ app.use("/farms", farmRouter);
 app.use("/orders", orderRouter);
 app.use('/home', homeRouter);
 app.use('/about', aboutRouter);
+app.use('/profile', profileRouter);
 
 app.use((req, res) => {
   res.status(404).render("404", { 
     title: 'Page Not Found',
-    error: `Route ${req.originalUrl} is not found` 
+    error: `Route ${req.originalUrl} is not found`,
+    user: req.session.user || null 
   });
 });
 

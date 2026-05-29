@@ -1,9 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const OrderController = require('../controllers/orderController');
+const OrderController = require("../controllers/orderController");
+const { isLoggedIn } = require("../middlewares/auth");
 
-router.get('/', OrderController.index);
-// router.get('/:id/invoice', OrderController.generateInvoice);
-router.get('/:id', OrderController.detail);
+router.get("/", isLoggedIn, OrderController.index);
+router.post("/", isLoggedIn, OrderController.create);
+router.get("/:id", isLoggedIn, OrderController.detail);
+router.post('/:id/confirm', isLoggedIn, OrderController.confirm);
+// router.get('/:id/invoice', isLoggedIn, OrderController.generateInvoice);
 
 module.exports = router;

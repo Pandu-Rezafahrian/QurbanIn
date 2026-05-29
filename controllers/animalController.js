@@ -1,4 +1,3 @@
-const { and } = require('sequelize');
 const { Animal, Farm } = require('../models');
 
 class AnimalController {
@@ -13,26 +12,39 @@ class AnimalController {
 
     static async detail(req, res) {
         try {
-            const animals = await Animal.findByPk(req.params.id, { include: Farm });
-            res.render('animalDetail', { user: req.session.user, animals, errors: [] });
+            const animal = await Animal.findByPk(req.params.id, { include: Farm });
+            if (!animal) return res.status(404).render('404', { title: 'Hewan Not Found', error: 'Hewan tidak ditemukan' });
+            res.render('animals/animalDetail', { user: req.session.user || null, animal, errors: [] });
         } catch (err) {
             res.send(err.message);
         }
     }
-    
+
     static async showForm(req, res) {
-        res.render('animalForm', { user: req.session.user, animal: null, mode: "add", errors: [] });
+        try {
+            const farms = await Farm.findAll();
+            res.render('animals/animalForm', { user: req.session.user || null, animal: null, farms, mode: 'add', errors: [] });
+        } catch (err) {
+            res.send(err.message);
+        }
     }
 
     static async add(req, res) {
         try {
-            const { name, type, weight, price, farmId } = req.body;
-            await Animal.create({ name, type, weight, price, farmId: farmId });
+            const { name, type, weight, age, price, farmId } = req.body; // fix: tambah age
+            await Animal.create({ name, type, weight, age, price, farmId });
             res.redirect('/animals');
         } catch (err) {
-            res.render('animalForm', { user: req.session.user, animal: null, mode: 'add', errors: [{ message: err.message }] });
+            const farms = await Farm.findAll();
+            res.render('animals/animalForm', {
+                user: req.session.user || null,
+                animal: null,
+                farms,
+                mode: 'add',
+                errors: err.errors || [{ message: err.message }]
+            });
         }
-    } 
+    }
 }
 
 module.exports = AnimalController;
