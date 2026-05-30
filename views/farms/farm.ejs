@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Farms Catalog</title>
+    </head>
+    <body>
+        <%- include('../partials/navbar') %>
+
+        <h1>Farms Catalog</h1>
+
+        <% if (farms && farms.length > 0) { %>
+            <ul>
+            <% farms.forEach(farm => { %>
+                <li>
+                <strong><%= farm.name %></strong>  
+                (ID: <%= farm.id %>)  
+                - Location: <%= farm.location %>
+                </li>
+            <% }) %>
+            </ul>
+        <% } else { %>
+            <p>No farms found.</p>
+        <% } %>
+    </body>
+</html>

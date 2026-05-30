@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><%- include('../partials/head') %></head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container" style="padding-top:36px;padding-bottom:60px;max-width:700px">
+    <a href="/orders" style="font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:4px;margin-bottom:20px">← Kembali</a>
+
+    <% if (typeof order !== 'undefined' && order) { %>
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+        <div>
+          <h1 style="font-size:24px;font-weight:800;letter-spacing:-0.02em">Order #<%= order.id %></h1>
+          <p style="font-size:13px;color:var(--muted);margin-top:4px"><%= new Date(order.orderDate).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) %></p>
+        </div>
+        <span class="badge badge-<%= order.status %>" style="font-size:13px;padding:6px 14px"><%= order.status %></span>
+      </div>
+
+      <!-- Status Tracking -->
+      <div class="card" style="padding:20px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:16px">Status Pesanan</div>
+        <div style="display:flex;align-items:center;gap:0">
+
+          <!-- Step 1: Pending -->
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+            <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;
+              background:<%= ['pending','confirmed','selesai','cancelled'].includes(order.status) ? 'var(--primary)' : 'var(--bg)' %>;
+              color:<%= ['pending','confirmed','selesai','cancelled'].includes(order.status) ? '#fff' : 'var(--muted)' %>;
+              border: 2px solid <%= ['pending','confirmed','selesai'].includes(order.status) ? 'var(--primary)' : order.status === 'cancelled' ? '#E53E3E' : 'var(--primary-border)' %>">
+              <% if (order.status === 'cancelled') { %>✕<% } else { %>1<% } %>
+            </div>
+            <div style="font-size:11px;font-weight:600;margin-top:6px;color:<%= order.status === 'cancelled' ? '#E53E3E' : 'var(--primary)' %>">Pending</div>
+          </div>
+
+          <!-- Line -->
+          <div style="flex:1;height:2px;background:<%= ['confirmed','selesai'].includes(order.status) ? 'var(--primary)' : 'var(--primary-border)' %>;margin-bottom:20px"></div>
+
+          <!-- Step 2: Confirmed -->
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+            <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;
+              background:<%= ['confirmed','selesai'].includes(order.status) ? 'var(--primary)' : 'var(--bg)' %>;
+              color:<%= ['confirmed','selesai'].includes(order.status) ? '#fff' : 'var(--muted)' %>;
+              border: 2px solid <%= ['confirmed','selesai'].includes(order.status) ? 'var(--primary)' : 'var(--primary-border)' %>">2</div>
+            <div style="font-size:11px;font-weight:600;margin-top:6px;color:<%= ['confirmed','selesai'].includes(order.status) ? 'var(--primary)' : 'var(--muted)' %>">Dikonfirmasi</div>
+          </div>
+
+          <!-- Line -->
+          <div style="flex:1;height:2px;background:<%= order.status === 'selesai' ? 'var(--primary)' : 'var(--primary-border)' %>;margin-bottom:20px"></div>
+
+          <!-- Step 3: Selesai -->
+          <div style="display:flex;flex-direction:column;align-items:center;flex:1">
+            <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;
+              background:<%= order.status === 'selesai' ? 'var(--primary)' : 'var(--bg)' %>;
+              color:<%= order.status === 'selesai' ? '#fff' : 'var(--muted)' %>;
+              border: 2px solid <%= order.status === 'selesai' ? 'var(--primary)' : 'var(--primary-border)' %>">3</div>
+            <div style="font-size:11px;font-weight:600;margin-top:6px;color:<%= order.status === 'selesai' ? 'var(--primary)' : 'var(--muted)' %>">Selesai</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Info Pembeli -->
+      <div class="card" style="padding:20px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px">Info Pembeli</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Nama</div>
+            <div style="font-size:14px;font-weight:600"><%= order.User.UserProfile ? order.User.UserProfile.fullName : '-' %></div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Email</div>
+            <div style="font-size:14px;font-weight:600"><%= order.User.email %></div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Telepon</div>
+            <div style="font-size:14px;font-weight:600"><%= order.User.UserProfile ? order.User.UserProfile.phone : '-' %></div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Alamat Pengiriman</div>
+            <div style="font-size:14px;font-weight:600"><%= order.User.UserProfile ? order.User.UserProfile.address : '-' %></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item Pesanan -->
+      <div class="card" style="padding:20px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px">Item Pesanan</div>
+        <% order.OrderItems.forEach(item => { %>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:0.5px solid var(--primary-border)">
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="width:44px;height:44px;background:var(--primary-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px">
+                <%= item.Animal.type === 'sapi' ? '🐄' : item.Animal.type === 'kambing' ? '🐐' : '🐑' %>
+              </div>
+              <div>
+                <div style="font-size:14px;font-weight:600"><%= item.Animal.name %></div>
+                <div style="font-size:12px;color:var(--muted)"><%= item.Animal.weight %> kg · <%= item.Animal.age %> thn</div>
+                <div style="font-size:12px;color:var(--muted)">dari <%= item.Animal.Farm.name %> · <%= item.Animal.Farm.location %></div>
+              </div>
+            </div>
+            <div style="font-size:14px;font-weight:700;color:var(--primary)">Rp <%= item.price.toLocaleString('id-ID') %></div>
+          </div>
+        <% }) %>
+      </div>
+
+      <!-- Total -->
+      <div class="card" style="padding:20px;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div style="font-size:15px;font-weight:700">Total Pembayaran</div>
+        <div style="font-size:22px;font-weight:800;color:var(--primary)">Rp <%= order.totalPrice.toLocaleString('id-ID') %></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex;gap:10px">
+        <% if (order.status === 'pending') { %>
+          <!-- Cancel Order -->
+          <form action="/orders/<%= order.id %>/cancel" method="POST" style="flex:1;margin:0">
+            <button type="submit" class="btn-danger" style="width:100%;padding:11px;font-size:14px" onclick="return confirm('Batalkan pesanan ini?')">Batalkan Pesanan</button>
+          </form>
+        <% } %>
+
+        <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+          <% if (order.status === 'pending') { %>
+            <!-- Confirm Order (admin) -->
+            <form action="/orders/<%= order.id %>/confirm" method="POST" style="flex:1;margin:0">
+              <button type="submit" class="btn-primary" style="width:100%;padding:11px;font-size:14px">Konfirmasi Pesanan</button>
+            </form>
+          <% } %>
+          <!-- Delete Order (admin) -->
+          <form action="/orders/<%= order.id %>/delete" method="POST" style="flex:1;margin:0">
+            <button type="submit" class="btn-danger" style="width:100%;padding:11px;font-size:14px;background:#888" onclick="return confirm('Hapus pesanan ini permanen?')">Hapus Pesanan</button>
+          </form>
+        <% } %>
+      </div>
+
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-icon">📦</div>
+        <p>Order tidak ditemukan.</p>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>

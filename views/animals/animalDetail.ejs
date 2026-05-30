@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><%- include('../partials/head') %></head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <div class="container" style="padding-top:36px;padding-bottom:60px;max-width:800px">
+    <a href="/animals" style="font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:4px;margin-bottom:24px">← Kembali ke Katalog</a>
+
+    <% if (typeof animal !== 'undefined' && animal) { %>
+
+      <div class="card" style="overflow:hidden;margin-bottom:20px">
+        <!-- Image / Ilustrasi -->
+        <div style="height:200px;background:linear-gradient(135deg,var(--primary-light),#C8EDD8);display:flex;align-items:center;justify-content:center;font-size:80px;position:relative">
+          <%= animal.type === 'sapi' ? '🐄' : animal.type === 'kambing' ? '🐐' : '🐑' %>
+          <span class="badge badge-<%= animal.type %>" style="position:absolute;top:16px;left:16px;font-size:12px;padding:5px 12px"><%= animal.type %></span>
+          <span class="badge badge-<%= animal.status %>" style="position:absolute;top:16px;right:16px;font-size:12px;padding:5px 12px"><%= animal.status %></span>
+        </div>
+
+        <!-- Info Utama -->
+        <div style="padding:28px">
+          <h1 style="font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px"><%= animal.name %></h1>
+
+          <!-- Stats Row -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px">
+            <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+              <div style="font-size:20px;font-weight:800;color:var(--primary)"><%= animal.weight %> kg</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Berat</div>
+            </div>
+            <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+              <div style="font-size:20px;font-weight:800;color:var(--primary)"><%= animal.age %> thn</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Usia</div>
+            </div>
+            <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+              <div style="font-size:20px;font-weight:800;color:var(--primary)">Rp <%= animal.price.toLocaleString('id-ID') %></div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">Harga</div>
+            </div>
+          </div>
+
+          <!-- Info Kandang (eager loading) -->
+          <% if (animal.Farm) { %>
+            <div style="background:var(--primary-light);border:0.5px solid var(--primary-border);border-radius:12px;padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:14px">
+              <span style="font-size:28px">🏡</span>
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:2px">Dari Kandang</div>
+                <div style="font-size:15px;font-weight:700"><%= animal.Farm.name %></div>
+                <div style="font-size:13px;color:var(--muted)">📍 <%= animal.Farm.location %></div>
+              </div>
+            </div>
+          <% } %>
+
+          <!-- Tombol Pesan -->
+          <% if (animal.status === 'tersedia') { %>
+            <% if (typeof user !== 'undefined' && user && (user.role === 'buyer' || user.role === 'pembeli')) { %>
+              <form action="/orders" method="POST" style="margin:0">
+                <input type="hidden" name="animalId" value="<%= animal.id %>">
+                <button type="submit" class="btn-primary" style="width:100%;padding:13px;font-size:14px"onclick="return confirm(`Pesan <%= animal.name %> seharga Rp <%= animal.price.toLocaleString('id-ID') %>?`)">
+                  Pesan
+                </button>
+              </form>
+            <% } else if (typeof user === 'undefined' || !user) { %>
+              <a href="/login" class="btn-outline" style="width:100%;text-align:center;display:block;padding:13px;font-size:14px">Login untuk Memesan</a>
+            <% } %>
+          <% } else { %>
+            <div style="width:100%;text-align:center;padding:13px;font-size:14px;font-weight:600;color:var(--muted);background:var(--bg);border-radius:8px">Hewan ini sudah terjual</div>
+          <% } %>
+
+          <!-- Edit/Delete untuk farmer pemilik -->
+          <% if (typeof user !== 'undefined' && user && user.role === 'farmer') { %>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <a href="/animals/<%= animal.id %>/edit" class="btn-outline" style="flex:1;text-align:center;padding:9px">Edit</a>
+              <form action="/animals/<%= animal.id %>?_method=DELETE" method="POST" style="flex:1;margin:0">
+                <button type="submit" class="btn-danger" style="width:100%;padding:9px" onclick="return confirm('Hapus hewan ini?')">Hapus</button>
+              </form>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-icon">🐄</div>
+        <p>Hewan tidak ditemukan.</p>
+        <a href="/animals" style="color:var(--primary);font-weight:600;font-size:13px">← Kembali ke katalog</a>
+      </div>
+    <% } %>
+
+  </div>
+</body>
+</html>

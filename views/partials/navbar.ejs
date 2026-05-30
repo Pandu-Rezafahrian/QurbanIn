@@ -1,0 +1,28 @@
+<nav class="navbar">
+  <div class="container">
+    <a href="/home" class="nav-brand">Qurban<span>In</span><sup>✦</sup></a>
+    <div class="nav-links">
+      <a href="/home">Home</a>
+      <a href="/about">About</a>
+      <a href="/animals">Katalog</a>
+      <!-- <a href="/farms">Farms</a> -->
+      <% if (typeof user !== 'undefined' && user && user.role === 'farmer') { %>
+        <a href="/farms">Kandang Saya</a>
+      <% } %>
+      <% if (typeof user !== 'undefined' && user) { %>
+        <a href="/orders">Pesanan</a>
+      <% } %>
+    </div>
+    <div class="nav-actions">
+      <% if (typeof user !== 'undefined' && user) { %>
+        <a href="/profile" class="btn-outline">👤 <%= user.email %></a>
+        <form action="/logout" method="POST" style="margin:0">
+          <button type="submit" class="btn-primary">Keluar</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="btn-outline">Masuk</a>
+        <a href="/register" class="btn-primary">Daftar Gratis</a>
+      <% } %>
+    </div>
+  </div>
+</nav>

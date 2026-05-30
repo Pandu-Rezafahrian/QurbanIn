@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><%- include('../partials/head') %></head>
+<body>
+  <%- include('../partials/navbar') %>
+  <div class="container" style="padding-top:60px;padding-bottom:60px;max-width:440px">
+    <div style="text-align:center;margin-bottom:28px">
+      <h1 style="font-size:26px;font-weight:800;letter-spacing:-0.02em;margin-bottom:6px">Selamat Datang</h1>
+      <p style="font-size:13px;color:var(--muted)">Masuk ke akun QurbanIn kamu</p>
+    </div>
+    <div class="card" style="padding:32px">
+      <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+        <div class="error-list">
+          <% errors.forEach(e => { %><p>⚠ <%= e %></p><% }) %>
+        </div>
+      <% } %>
+      <form action="/login" method="POST">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="email@kamu.com" required>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;padding:11px;font-size:14px">Masuk</button>
+      </form>
+      <p style="text-align:center;margin-top:20px;font-size:13px;color:var(--muted)">
+        Belum punya akun? <a href="/register" style="color:var(--primary);font-weight:600">Daftar sekarang</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

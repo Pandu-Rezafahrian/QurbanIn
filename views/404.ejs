@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+    </head>
+    <body>
+        <%- include('partials/navbar') %>
+
+        <h1><%= title %></h1>
+
+        <% if (typeof error !== 'undefined') { %>
+            <p style="color: red;"><%= error %></p>
+        <% } else { %>
+            <p>The page you are looking for is not found!</p>
+        <% } %>
+    </body>
+</html>

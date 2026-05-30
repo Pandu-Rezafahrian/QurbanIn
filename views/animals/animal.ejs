@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head><%- include('../partials/head') %></head>
+<body>
+  <%- include('../partials/navbar') %>
+  <div class="container" style="padding-top:36px;padding-bottom:60px">
+
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px">
+      <div>
+        <h1>Katalog Hewan</h1>
+        <% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+          <p>Kelola semua hewan kurban — tambah, edit, dan hapus data</p>
+        <% } else { %>
+          <p>Temukan hewan kurban terbaik dari peternak terverifikasi</p>
+        <% } %>
+      </div>
+      <% if (typeof user !== 'undefined' && user && (user.role === 'admin' || user.role === 'farmer' || user.role === 'peternak')) { %>
+        <a href="/animals/add" class="btn-primary">+ Tambah Hewan</a>
+      <% } %>
+    </div>
+
+    <!-- Filter & Search -->
+    <form method="GET" action="/animals" style="display:flex;gap:10px;margin-bottom:28px;flex-wrap:wrap">
+      <input type="text" name="search" placeholder="Cari nama hewan..." value="<%= typeof search !== 'undefined' ? search : '' %>" style="padding:9px 14px;border:1.5px solid var(--primary-border);border-radius:8px;font-size:13px;font-family:var(--font);outline:none;flex:1;min-width:180px">
+      <select name="type" style="padding:9px 14px;border:1.5px solid var(--primary-border);border-radius:8px;font-size:13px;font-family:var(--font);outline:none">
+        <option value="">Semua Jenis</option>
+        <option value="sapi" <%= typeof type !== 'undefined' && type === 'sapi' ? 'selected' : '' %>>Sapi</option>
+        <option value="kambing" <%= typeof type !== 'undefined' && type === 'kambing' ? 'selected' : '' %>>Kambing</option>
+        <option value="domba" <%= typeof type !== 'undefined' && type === 'domba' ? 'selected' : '' %>>Domba</option>
+      </select>
+      <select name="sort" style="padding:9px 14px;border:1.5px solid var(--primary-border);border-radius:8px;font-size:13px;font-family:var(--font);outline:none">
+        <option value="">Urutkan</option>
+        <option value="price_asc" <%= typeof sort !== 'undefined' && sort === 'price_asc' ? 'selected' : '' %>>Harga Terendah</option>
+        <option value="price_desc" <%= typeof sort !== 'undefined' && sort === 'price_desc' ? 'selected' : '' %>>Harga Tertinggi</option>
+        <option value="weight_desc" <%= typeof sort !== 'undefined' && sort === 'weight_desc' ? 'selected' : '' %>>Berat Terbesar</option>
+      </select>
+      <button type="submit" class="btn-primary">Cari</button>
+    </form>
+
+    <!-- Grid -->
+    <% if (typeof animals !== 'undefined' && animals && animals.length > 0) { %>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        <% animals.forEach(animal => { %>
+          <div class="card">
+            <div style="height:100px;background:linear-gradient(135deg,var(--primary-light),#C8EDD8);display:flex;align-items:center;justify-content:center;font-size:40px;position:relative">
+              <%= animal.type === 'sapi' ? '🐄' : animal.type === 'kambing' ? '🐐' : '🐑' %>
+              <span class="badge badge-<%= animal.type %>" style="position:absolute;top:8px;left:8px"><%= animal.type %></span>
+              <% if (animal.status === 'terjual') { %>
+                <span style="position:absolute;top:8px;right:8px;background:#E53E3E;color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px">Terjual</span>
+              <% } %>
+            </div>
+            <div style="padding:14px">
+              <div style="font-size:15px;font-weight:700;margin-bottom:4px"><%= animal.name %></div>
+              <div style="font-size:12px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px">
+                <span class="badge badge-<%= animal.status %>"><%= animal.status %></span>
+                <span><%= animal.weight %> kg · <%= animal.age %> thn</span>
+              </div>
+              <div style="font-size:16px;font-weight:700;color:var(--primary);margin-bottom:12px">Rp <%= animal.price.toLocaleString('id-ID') %></div>
+
+              <a href="/animals/<%= animal.id %>" class="btn-primary" style="width:100%;text-align:center;display:block;padding:8px;margin-bottom:8px">Lihat Detail</a>
+
+              <!-- Admin & Farmer: Edit + Hapus -->
+              <% if (typeof user !== 'undefined' && user && (user.role === 'admin' || user.role === 'farmer' || user.role === 'peternak')) { %>
+                <div style="display:flex;gap:6px">
+                  <a href="/animals/<%= animal.id %>/edit" class="btn-outline" style="flex:1;text-align:center;padding:6px;font-size:12px">✏️ Edit</a>
+                  <form action="/animals/<%= animal.id %>/delete" method="POST" style="flex:1;margin:0">
+                    <button type="submit" class="btn-danger" style="width:100%;padding:6px;font-size:12px" onclick="return confirm('Hapus hewan ini?')">🗑️ Hapus</button>
+                  </form>
+                </div>
+              <% } %>
+
+              <!-- Pembeli: langsung pesan dari catalog -->
+              <% if (typeof user !== 'undefined' && user && (user.role === 'pembeli' || user.role === 'buyer') && animal.status === 'tersedia') { %>
+                <form action="/orders" method="POST" style="margin:0">
+                  <input type="hidden" name="animalId" value="<%= animal.id %>">
+                  <button type="submit" class="btn-outline" style="width:100%;padding:6px;font-size:12px;margin-top:6px">🛒 Pesan</button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="empty-state">
+        <div class="empty-icon">🐄</div>
+        <p>Belum ada hewan tersedia saat ini.</p>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>
